@@ -8,29 +8,38 @@
 PACKETNAME="packetdrill"
 INSTALL_DIR="/opt/${PACKETNAME}_suite"
 
+if [[ ! -v $1 ]]; then
+	ARCH_TC=${ARCH_TC:-$1}
+fi
 
-ARCH=x86_64
-
-if test $(which aarch64-linux-gnu-gcc) ; then
-	ARCH=arm64
-	export CC="aarch64-linux-gnu-gcc"
-	export LD="aarch64-linux-gnu-ld"
-fi
-if test $(which arm-linux-gnueabihf-gcc) ; then
-	ARCH=arm
-	export CC="arm-linux-gnueabihf-gcc"
-	export LD="arm-linux-gnueabihf-ld"
-fi
-if test $(which i686-linux-gnu-gcc) ; then
-	ARCH=i386
-	export CC="i686-linux-gnu-gcc"
-	export LD="i686-linux-gnu-ld"
-fi
-if test $(which clang) ; then
-	#export CC="clang --target-arch arm64"
-	export CC="clang"
-
-fi
+case "${ARCH_TC}" in
+	arm64_gcc)
+		export CC="aarch64-linux-gnu-gcc"
+		export LD="aarch64-linux-gnu-ld"
+		;;
+	arm64_clang)
+		export CC="clang --target=aarch64-linux-gnu"
+		;;
+	arm_gcc)
+		export CC="arm-linux-gnueabihf-gcc"
+		export LD="arm-linux-gnueabihf-ld"
+		;;
+	arm_clang)
+		export CC="clang --target=arm-linux-gnueabihf"
+		;;
+	i386_gcc)
+		export CC="i686-linux-gnu-gcc"
+		export LD="i686-linux-gnu-ld"
+		;;
+	i386_clang)
+		export CC="clang --target=i686-linux-gnu"
+		;;
+	*);;
+	x86_64_clang)
+		export CC="clang"
+		;;
+	*);;
+esac
 
 
 pushd gtests/net/${PACKETNAME}
@@ -43,4 +52,4 @@ cp in_netns.sh ${INSTALL_DIR}/${PACKETNAME}
 cp -r ../tcp ${INSTALL_DIR}
 cp -r ../common ${INSTALL_DIR}
 popd
-tar cJf ${PACKETNAME}-${ARCH}.tar.xz ${INSTALL_DIR}
+tar cJf ${PACKETNAME}-${ARCH_TC}.tar.xz ${INSTALL_DIR}
