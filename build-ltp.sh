@@ -44,6 +44,6 @@ apt update && apt install -y xz-utils flex bison wget curl net-tools quota genis
 
 make autotools
 CFLAGS="-pthread" LDFLAGS="-pthread -static" ./configure ${CROSS_HOST} --without-tirpc
-make all
+make all || exit 1
 make SKIP_IDCHECK=1 install
 tar cJf ltp-${ARCH_TC}.tar.xz /opt/ltp
