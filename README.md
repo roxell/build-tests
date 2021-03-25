@@ -3,6 +3,10 @@ How to build test packages statically based from tuxmake's containers and packag
 
 # Usage
 
+First you have to clone packetdrill or ltp and 'cd path/to/test' create a
+symlink or copy the build-*.sh file to the repository you cloned. Then do the
+following command:
+
 ## Podman
 ```
 podman run --rm -v $(pwd):/build -w /build tuxmake/arm64_clang ./build-packetdrill.sh arm64_clang
